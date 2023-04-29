@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { BsPlus } from "react-icons/bs";
 import { CoinsContext } from "../../App";
 import { useContext } from "react";
+import Product from "../Product";
 
 const Container = styled.div`
   width: 90%;
@@ -13,69 +13,39 @@ const Container = styled.div`
   gap: 6.4rem;
 `;
 
-const Card = styled.div`
-  text-align: center;
-  position: relative;
-  width: 50%;
-  border: 5px solid #fff;
-  border-radius: 2.3rem;
-  padding: 2.4rem;
-`;
-
-const Icon = styled.img`
-  margin-bottom: 1.6rem;
-`;
-
-const Name = styled.h3`
-  font-size: 2.4rem;
-  color: #fff;
-  margin-bottom: 1.6rem;
-`;
-
-const Price = styled.p`
-  font-size: 1.6rem;
-  color: #fff;
-`;
-
-const AddToCartBtn = styled.button`
-  position: absolute;
-  top: 5%;
-  right: 5%;
-  border: none;
-  background: none;
-  color: #fff;
-  font-size: 2.4rem;
-  border: 3px solid #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
 const ProductsSection = ({ coins }) => {
   const { cartCoins, setCartCoins } = useContext(CoinsContext);
 
-  const handleClick = (coin) => {
-    setCartCoins([...cartCoins, { coinArr: coin, quantity: 0 }]);
-    console.log(cartCoins);
+  const handleAdd = (item) => {
+    const isDublicate = cartCoins.some(({ coin }) => coin.id === item.id);
+    isDublicate
+      ? setCartCoins(
+          cartCoins.map((cartCoin) => {
+            if (item.id === cartCoin.coin.id) {
+              return {
+                ...cartCoin,
+                quantity: cartCoin.quantity + 1,
+              };
+            } else {
+              return cartCoin;
+            }
+          })
+        )
+      : setCartCoins([...cartCoins, { coin: item, quantity: 1 }]);
   };
+
+  console.log("coins", cartCoins);
 
   return (
     <Container>
       {coins.map((coin) => (
-        <Card key={coin.id}>
-          <Icon src={coin.icon} />
-          <Name>{coin.name}</Name>
-          <Price>{coin.price.toFixed(2)}€</Price>
-          <AddToCartBtn
-            onClick={() => {
-              handleClick(coin);
-            }}
-          >
-            <BsPlus></BsPlus>
-          </AddToCartBtn>
-        </Card>
+        <Product
+          onAddCard={() => handleAdd(coin)}
+          key={coin.id}
+          icon={coin.icon}
+          name={coin.name}
+          price={coin.price}
+        />
       ))}
     </Container>
   );
