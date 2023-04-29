@@ -37,17 +37,15 @@ const CoinsList = styled.div`
   border-radius: 2.3rem;
 `;
 
-const CoinsContainer = ({ data, visibility }) => {
+const CoinsContainer = ({ data }) => {
   return (
     <CoinsList>
-      {visibility
-        ? data.map((coin) => (
-            <Coin key={coin.id}>
-              {coin.name}
-              <CoinIcon src={coin.icon} />
-            </Coin>
-          ))
-        : ""}
+      {data.map((coin) => (
+        <Coin key={coin.id}>
+          {coin.name}
+          <CoinIcon src={coin.icon} />
+        </Coin>
+      ))}
     </CoinsList>
   );
 };
@@ -66,30 +64,26 @@ const CoinIcon = styled.img`
   width: 2.4rem;
 `;
 
-const Search = ({ coins: c, copyCoins: cCoins }) => {
-  const [coins, setCoins] = useState(c);
-  const [visibile, setVisible] = useState(false);
+const Search = ({ coins: defaultCoins }) => {
+  const [coins, setCoins] = useState([]);
 
-  const handleChange = (e) => {
-    if (e.target.value !== "") {
-      setCoins(
-        cCoins.filter((coin) =>
-          coin.name.toLowerCase().startsWith(e.target.value.toLowerCase())
+  const handleSearch = (value) => {
+    if (value) {
+      return setCoins(
+        defaultCoins.filter((coin) =>
+          coin.name.toLowerCase().startsWith(value.toLowerCase())
         )
       );
-      // console.log(e.target.value);
-      setVisible(true);
-    } else {
-      setCoins(cCoins);
-      setVisible(false);
     }
+
+    return setCoins([]);
   };
 
   return (
     <Container>
-      <Input onChange={handleChange} />
+      <Input onChange={(event) => handleSearch(event.target.value)} />
       <Icon />
-      <CoinsContainer data={coins} visibility={visibile} />
+      {!!coins.length && <CoinsContainer data={coins} />}
     </Container>
   );
 };

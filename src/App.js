@@ -8,11 +8,11 @@ import { createContext, useEffect, useState } from "react";
 export const CoinsContext = createContext([]);
 
 const Container = styled.div`
-  overflow-y: ${(props) => (props.isOverflow ? "hidden" : "scroll")};
+  overflow-y: ${(props) => (props.isOverflow ? "hidden" : "auto")};
   height: 100vh;
 `;
 
-const Bg = styled.div`
+const GradientBg = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -36,7 +36,6 @@ function App() {
   const [copyCoins, setCopyCoins] = useState([]);
   const [cartCoins, setCartCoins] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
-  const [coinsQuantity, setCoinsQuantity] = useState([]);
 
   const fetchCoinData = () => {
     fetch(
@@ -56,26 +55,20 @@ function App() {
     fetchCoinData();
   }, []);
 
-  useEffect(() => {
-    setCoinsQuantity(Array(coins.length).fill(0));
-  }, []);
-  console.log(coinsQuantity);
+  console.log(cartCoins);
 
   return (
-    <CoinsContext.Provider
-      value={{
-        cartCoins,
-        setCartCoins,
-        cartOpen,
-        setCartOpen,
-      }}
-    >
-      <Bg></Bg>
+    <CoinsContext.Provider value={{ cartCoins, setCartCoins }}>
+      <GradientBg />
       <Container isOverflow={cartOpen}>
-        <Header coins={coins} copyCoins={copyCoins} />
+        <Header
+          onCartOpen={() => setCartOpen(true)}
+          coins={coins}
+          copyCoins={copyCoins}
+        />
         <HeroSection />
         <ProductsSection coins={coins} />
-        <CartWindow></CartWindow>
+        {cartOpen && <CartWindow onClose={() => setCartOpen(false)} />}
       </Container>
     </CoinsContext.Provider>
   );
