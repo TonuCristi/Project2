@@ -47,7 +47,7 @@ const SearchAccCart = styled.div`
   gap: 2.4rem;
 `;
 
-const Header = ({ coins, copyCoins, onCartOpen }) => {
+const Header = ({ coins, copyCoins }) => {
   return (
     <Container>
       <Logo href="#">BitCart</Logo>
@@ -59,7 +59,7 @@ const Header = ({ coins, copyCoins, onCartOpen }) => {
       <SearchAccCart>
         <Search coins={coins} copyCoins={copyCoins} />
         <Account />
-        <Cart onClick={onCartOpen} />
+        <Cart />
       </SearchAccCart>
     </Container>
   );

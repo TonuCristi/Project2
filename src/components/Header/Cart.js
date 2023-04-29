@@ -29,23 +29,20 @@ const Icon = styled(BsCartPlus)`
   font-size: 2.4rem;
 `;
 
-const Counter = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(100%, -50%);
-`;
+const Cart = () => {
+  const { cartCoins, setCartCoins, cartOpen, setCartOpen } =
+    useContext(CoinsContext);
 
-const Cart = ({ onClick }) => {
-  const { cartCoins } = useContext(CoinsContext);
+  const handleClick = () => {
+    setCartOpen(!cartOpen);
+  };
 
   return (
     <Container>
-      <CartBtn onClick={onClick}>
+      <CartBtn onClick={handleClick}>
         <Icon />
         Cart
       </CartBtn>
-      {!!cartCoins.length && <Counter>{cartCoins.length}</Counter>}
     </Container>
   );
 };

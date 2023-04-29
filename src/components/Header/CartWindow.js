@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { CoinsContext } from "../../App";
 
 const Bg = styled.div`
+  display: ${(props) => (props.isOpen ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -12,6 +13,7 @@ const Bg = styled.div`
 `;
 
 const Container = styled.div`
+  display: ${(props) => (props.isOpen ? "block" : "none")};
   position: absolute;
   left: 50%;
   top: 50%;
@@ -31,7 +33,7 @@ const Container = styled.div`
   padding: 2.4rem 4.8rem;
   /* border: 5px solid #fff; */
   border-radius: 2.3rem;
-  overflow-y: auto;
+  overflow-y: scroll;
 `;
 
 const ProductsPayContainer = styled.div`
@@ -189,30 +191,35 @@ const ProceedPayBtn = styled.button`
   cursor: pointer;
 `;
 
-const CartWindow = ({ onClose }) => {
-  const { cartCoins } = useContext(CoinsContext);
+const CartWindow = () => {
+  const { cartCoins, setCartCoins, cartOpen, setCartOpen } =
+    useContext(CoinsContext);
+
+  const handleClick = () => {
+    setCartOpen(!cartOpen);
+  };
 
   return (
     <>
-      <Bg onClick={onClose} />
-      <Container>
+      <Bg onClick={handleClick} isOpen={cartOpen}></Bg>
+      <Container isOpen={cartOpen}>
         <Header>
           My cart
-          <CloseBtn onClick={onClose}>+</CloseBtn>
+          <CloseBtn onClick={handleClick}>+</CloseBtn>
         </Header>
         <ProductsPayContainer>
           <Products>
-            {cartCoins.map(({ coin, quantity }) => (
+            {cartCoins.map(({ coinArr: coin }) => (
               <Product key={coin.id}>
                 <NameIcon>
                   <Icon src={coin.icon}></Icon>
                   <Name>{coin.name}</Name>
                 </NameIcon>
                 <PriceControls>
-                  <ProductPrice>{coin.price}€</ProductPrice>
+                  <ProductPrice>{coin.price.toFixed(2)}€</ProductPrice>
                   <QuantityControls>
                     <SubBtn>-</SubBtn>
-                    <Quantity>{quantity}</Quantity>
+                    <Quantity>0</Quantity>
                     <AddBtn>+</AddBtn>
                   </QuantityControls>
                   <RemoveBtn>Remove</RemoveBtn>
