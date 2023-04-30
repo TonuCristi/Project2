@@ -33,7 +33,6 @@ const GradientBg = styled.div`
 
 function App() {
   const [coins, setCoins] = useState([]);
-  const [copyCoins, setCopyCoins] = useState([]);
   const [cartCoins, setCartCoins] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
 
@@ -45,8 +44,6 @@ function App() {
       .then((data) => {
         const { coins } = data;
         setCoins(coins);
-        setCopyCoins(coins);
-        // console.log(coins);
       })
       .catch((error) => console.log("error", error));
   };
@@ -55,17 +52,11 @@ function App() {
     fetchCoinData();
   }, []);
 
-  console.log(cartCoins);
-
   return (
-    <CoinsContext.Provider value={{ cartCoins, setCartCoins }}>
+    <CoinsContext.Provider value={{ cartCoins, setCartCoins, setCoins }}>
       <GradientBg />
       <Container isOverflow={cartOpen}>
-        <Header
-          onCartOpen={() => setCartOpen(true)}
-          coins={coins}
-          copyCoins={copyCoins}
-        />
+        <Header onCartOpen={() => setCartOpen(true)} coins={coins} />
         <HeroSection />
         <ProductsSection coins={coins} />
         {cartOpen && <CartWindow onClose={() => setCartOpen(false)} />}

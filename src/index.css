@@ -16,18 +16,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1;
   font-weight: 400;
-  /* background: rgb(13, 108, 79);
-  background: linear-gradient(
-    45deg,
-    rgba(13, 108, 79, 1) 0%,
-    rgba(0, 0, 0, 1) 38%,
-    rgba(13, 108, 79, 1) 100%
-  );
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat; */
-  /* height: 100%;
-  width: 100%; */
 }
 
 code {

@@ -190,7 +190,43 @@ const ProceedPayBtn = styled.button`
 `;
 
 const CartWindow = ({ onClose }) => {
-  const { cartCoins } = useContext(CoinsContext);
+  const { cartCoins, setCartCoins } = useContext(CoinsContext);
+
+  const handleSub = ({ coin }) => {
+    setCartCoins(
+      cartCoins.map((cartCoin) => {
+        if (cartCoin.coin.id === coin.id) {
+          if (cartCoin.quantity > 1) {
+            return {
+              ...cartCoin,
+              quantity: cartCoin.quantity - 1,
+              price: cartCoin.coin.price * (cartCoin.quantity - 1),
+            };
+          }
+        }
+        return cartCoin;
+      })
+    );
+  };
+
+  const handleAdd = ({ coin }) => {
+    setCartCoins(
+      cartCoins.map((cartCoin) => {
+        if (cartCoin.coin.id === coin.id) {
+          return {
+            ...cartCoin,
+            quantity: cartCoin.quantity + 1,
+            price: cartCoin.coin.price * (cartCoin.quantity + 1),
+          };
+        }
+        return cartCoin;
+      })
+    );
+  };
+
+  const handleRemove = ({ coin }) => {
+    setCartCoins(cartCoins.filter((cartCoin) => cartCoin.coin.id !== coin.id));
+  };
 
   return (
     <>
@@ -202,27 +238,45 @@ const CartWindow = ({ onClose }) => {
         </Header>
         <ProductsPayContainer>
           <Products>
-            {cartCoins.map(({ coin, quantity }) => (
+            {cartCoins.map(({ coin, quantity, price }) => (
               <Product key={coin.id}>
                 <NameIcon>
                   <Icon src={coin.icon}></Icon>
                   <Name>{coin.name}</Name>
                 </NameIcon>
                 <PriceControls>
-                  <ProductPrice>{coin.price}€</ProductPrice>
+                  <ProductPrice>{price.toFixed(2)}€</ProductPrice>
                   <QuantityControls>
-                    <SubBtn>-</SubBtn>
+                    <SubBtn
+                      onClick={() => handleSub({ coin, quantity, price })}
+                    >
+                      -
+                    </SubBtn>
                     <Quantity>{quantity}</Quantity>
-                    <AddBtn>+</AddBtn>
+                    <AddBtn
+                      onClick={() => handleAdd({ coin, quantity, price })}
+                    >
+                      +
+                    </AddBtn>
                   </QuantityControls>
-                  <RemoveBtn>Remove</RemoveBtn>
+                  <RemoveBtn
+                    onClick={() => handleRemove({ coin, quantity, price })}
+                  >
+                    Remove
+                  </RemoveBtn>
                 </PriceControls>
               </Product>
             ))}
           </Products>
           <Payment>
             <PriceBox>
-              Total: <TotalPrice>0€</TotalPrice>
+              Total:{" "}
+              <TotalPrice>
+                {cartCoins
+                  .reduce((acc, { coin, quantity, price }) => acc + price, 0)
+                  .toFixed(2)}
+                €
+              </TotalPrice>
             </PriceBox>
             <ProceedPayBtn>Proceed to pay</ProceedPayBtn>
           </Payment>
